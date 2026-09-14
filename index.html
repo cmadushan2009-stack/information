@@ -161,7 +161,6 @@
             filter: brightness(1.1);
         }
 
-        /* Views management */
         #main-view {
             display: block;
         }
@@ -188,26 +187,53 @@
             font-size: 1.2rem;
             font-weight: 500;
         }
+        
         .updates-box {
             text-align: left;
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(15, 23, 42, 0.8);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 25px;
-            margin-top: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.05);
+        }
+        .progress-container {
+            margin: 20px 0;
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent-glow));
+            border-radius: 5px;
+            box-shadow: 0 0 10px var(--accent-glow);
+            transition: width 1s ease-in-out;
         }
         .updates-box ul {
             padding-left: 20px;
-            margin-top: 10px;
+            margin-top: 15px;
         }
         .updates-box li {
             color: var(--text-muted);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             line-height: 1.6;
         }
         .back-btn {
             display: inline-block;
-            margin-top: 25px;
+            margin-top: 30px;
             background: rgba(56, 189, 248, 0.1);
             color: var(--accent-glow);
             border: 1px solid rgba(56, 189, 248, 0.3);
@@ -236,7 +262,7 @@
 
     <div class="container">
         
-        <!-- MAIN VIEW (Overview & Components) -->
+        <!-- MAIN VIEW -->
         <div id="main-view">
             <header>
                 <h1>🚗 ESP32 Smart 4WD IoT & AI RC Car</h1>
@@ -308,29 +334,70 @@
             </div>
         </div>
 
-        <!-- LOADER VIEW (10s Loading Screen) -->
+        <!-- LOADER VIEW -->
         <div id="loader-view">
             <div class="spinner"></div>
             <div class="loader-text">Please wait, check update and more information...</div>
         </div>
 
-        <!-- UPDATES VIEW (Final Content) -->
+        <!-- UPDATES VIEW (Update Box ඇතුළට සියලුම අලුත් විස්තර එකතු කර ඇත) -->
         <div id="updates-view">
             <header>
                 <h1>🔄 Software Updates & About</h1>
-                <div class="creators">ESP32 Smart 4WD RC Car Firmware | <span>v2.1.0 Pro</span></div>
+                <div class="creators">ESP32 Smart 4WD RC Car Firmware | <span id="header-version">V1.260917</span></div>
+            </header>
+
+            <header style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+                <div style="text-align: left;">
+                    <h3 style="color: var(--text-main); font-size: 1.15rem; margin-bottom: 8px;">
+                        ✓ Current Active Update: <span id="current-version-text" style="color: var(--accent-glow);">V1.260917</span>
+                    </h3>
+                </div>
             </header>
 
             <div class="updates-box">
-                <h3 style="color: var(--accent-glow); margin-bottom: 10px;">🚀 Recent Software Updates</h3>
-                <ul>
-                    <li><strong>v2.1.0:</strong> Added live video streaming optimization for the ESP32 3MP Cam board.</li>
-                    <li><strong>v2.0.5:</strong> Improved PWM motor response for smoother 4WD navigation via mobile app.</li>
-                    <li><strong>v2.0.0:</strong> Integrated real-time battery voltage monitoring and OLED telemetry display.</li>
-                </ul>
-                <p style="margin-top: 15px;">
-                    This software is custom-built to orchestrate multi-core tasks on the ESP32 architecture, handling simultaneous Wi-Fi video streaming, sensor telemetry collection, and PWM motor driver signals without latency.
+                <h3 style="color: var(--accent-glow); margin-bottom: 12px; font-size: 1.25rem;">📦 Upcoming New Update Details</h3>
+                
+                <p style="margin-bottom: 8px;">
+                    <strong>New Update Name/Version:</strong> <span id="upcoming-version-text" style="color: #38bdf8; font-weight: bold;">V1.30.0 (AI Vision & Auto-Mapping)</span>
                 </p>
+                <p style="margin-bottom: 15px;">
+                    <strong>Expected Release Date:</strong> <strong id="release-date-text" style="color: #38bdf8;">2026.10.15</strong>
+                </p>
+                
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Development Status: <strong id="status-text">Final Testing Phase</strong></span>
+                        <span id="progress-percentage-text">85% Completed</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="progress-bar" class="progress-bar-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Security Enhancements -->
+                <h3 style="color: var(--accent-glow); margin: 25px 0 10px 0; font-size: 1.1rem;">🛡️ Security Enhancements</h3>
+                <ul>
+                    <li><strong>Secure Wi-Fi Connection:</strong> Configured the ESP32 microcontroller to connect only to a specific and reliable network, minimizing unauthorized access.</li>
+                    <li><strong>Stable Web Server:</strong> Implemented a stable code structure to prevent memory leaks or system crashes while the web server is running.</li>
+                    <li><strong>Command Validation:</strong> Converts commands received from the web dashboard into correct signals and safely sends them to the motor driver.</li>
+                </ul>
+
+                <!-- Performance Improvements -->
+                <h3 style="color: var(--accent-glow); margin: 25px 0 10px 0; font-size: 1.1rem;">⚡ Performance Improvements</h3>
+                <ul>
+                    <li><strong>Optimized Web Response:</strong> Since HTML, CSS, and JavaScript codes are well-organized in one place, the web page loads very quickly in the browser.</li>
+                    <li><strong>Smooth Motor Control:</strong> Configured to operate instantly without any delay when moving the car forward, backward, left, and right.</li>
+                    <li><strong>Full Code Integrity:</strong> Unlike the second code where CSS styles or interfaces stopped halfway, a successful source code complete with all features is provided.</li>
+                </ul>
+
+                <!-- More Features -->
+                <h3 style="color: var(--accent-glow); margin: 25px 0 10px 0; font-size: 1.1rem;">🌟 More Features</h3>
+                <ul>
+                    <li>Real-time sensor feedback integrated smoothly into the modern web UI dashboard.</li>
+                    <li>Responsive design optimized for both mobile phones and desktop browsers.</li>
+                    <li>Modular software architecture allowing easy future firmware updates and expansion.</li>
+                </ul>
             </div>
 
             <div style="text-align: center;">
@@ -343,22 +410,48 @@
         </div>
     </div>
 
-    <!-- JavaScript Logic for Switching Views -->
+    <!-- JavaScript Configuration Panel -->
     <script>
+        // ==========================================================
+        // ⚙️ CONFIGURATION PANEL (මෙතනින් ඔබට අවශ්‍ය දේවල් පහසුවෙන් වෙනස් කරන්න)
+        // ==========================================================
+        const updateSettings = {
+            currentVersion: "V1.260917",          // 🚗 දැනට කාර් එකේ ෆර්ම්වෙයාර් එකේ තියෙන වර්ෂන් එක
+            upcomingVersion: "V1.30.0 (AI Vision & Auto-Mapping)", // 🚀 අලුතින් එන්න තියෙන අප්ඩේට් එකේ නම/අංකය
+            upcomingReleaseDate: "2026.10.15",    // 🗓️ අලුත් අප්ඩේට් එක නිකුත් වන අනාගත දිනය
+            progressValue: 85,                      // 📈 ප්‍රගති ප්‍රතිශතය (0 සිට 100 දක්වා)
+            statusDescription: "Final Testing Phase" // වත්මන් ප්‍රගති තත්ත්වය
+        };
+        // ==========================================================
+
+        // දත්ත ස්වයංක්‍රීයව වෙබ් පිටුවට ඇතුළත් කිරීම
+        window.addEventListener('DOMContentLoaded', (event) => {
+            document.getElementById('header-version').innerText = updateSettings.currentVersion;
+            document.getElementById('current-version-text').innerText = updateSettings.currentVersion;
+            
+            document.getElementById('upcoming-version-text').innerText = updateSettings.upcomingVersion;
+            document.getElementById('release-date-text').innerText = updateSettings.upcomingReleaseDate;
+            document.getElementById('status-text').innerText = updateSettings.statusDescription;
+            
+            let percentage = updateSettings.progressValue;
+            if(percentage < 0) percentage = 0;
+            if(percentage > 100) percentage = 100;
+            
+            document.getElementById('progress-percentage-text').innerText = percentage + "% Completed";
+            document.getElementById('progress-bar').style.width = percentage + "%";
+        });
+
         function startUpdatesProcess() {
-            // Hide main view, show loader
             document.getElementById('main-view').style.display = 'none';
             document.getElementById('loader-view').style.display = 'block';
 
-            // Wait for 10 seconds (10000 milliseconds)
             setTimeout(function() {
                 document.getElementById('loader-view').style.display = 'none';
                 document.getElementById('updates-view').style.display = 'block';
-            }, 10000);
+            }, 10000); // තත්පර 10ක ලෝඩින් කාලය
         }
 
         function goBackToMain() {
-            // Hide updates view, show main view back
             document.getElementById('updates-view').style.display = 'none';
             document.getElementById('main-view').style.display = 'block';
         }
