@@ -14,6 +14,7 @@
             height: 100vh;
             overflow: hidden;
             touch-action: none;
+            cursor: pointer;
         }
         .circle {
             position: relative;
@@ -27,7 +28,6 @@
             align-items: center;
             box-shadow: inset 0 0 35px rgba(0,0,0,0.6), 0 0 30px rgba(59,130,246,0.5);
             overflow: hidden;
-            cursor: pointer;
         }
         .ball {
             position: absolute;
@@ -36,50 +36,60 @@
             background: #ffffff;
             border-radius: 50%;
             box-shadow: 0 0 25px rgba(255, 255, 255, 0.95), inset -6px -6px 15px rgba(0,0,0,0.2);
-            transition: transform 0.05s linear;
+            transform: translate(0px, 0px);
+            will-change: transform;
         }
     </style>
 </head>
-<body onclick="requestSensors()">
+<body>
     <div class="circle">
         <div id="ball" class="ball"></div>
     </div>
 
     <script>
         const maxTilt = 30;
+        const ball = document.getElementById('ball');
 
-        function requestSensors() {
+        // තිරයේ ඕනෑම තැනක ස්පර්ශ කළ වහාම සෙන්සර් ක්‍රියාත්මක කිරීම
+        document.body.addEventListener('click', initSensors, { once: true });
+        document.body.addEventListener('touchstart', initSensors, { once: true });
+
+        function initSensors() {
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                DeviceOrientationEvent.requestPermission().then(response => {
-                    if (response == 'granted') {
-                        window.addEventListener('deviceorientation', handleOrientation);
-                    }
-                }).catch(console.error);
+                // iOS (iPhone) සඳහා අවසර ඉල්ලීම
+                DeviceOrientationEvent.requestPermission()
+                    .then(response => {
+                        if (response === 'granted') {
+                            window.addEventListener('deviceorientation', handleOrientation, true);
+                        }
+                    })
+                    .catch(console.error);
             } else {
-                window.addEventListener('deviceorientation', handleOrientation);
+                // Android සඳහා සෙන්සර් සම්බන්ධ කිරීම
+                window.addEventListener('deviceorientation', handleOrientation, true);
             }
         }
 
-        window.addEventListener('load', () => {
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission !== 'function') {
-                window.addEventListener('deviceorientation', handleOrientation);
-            }
-        });
+        // ස්වයංක්‍රීයව ක්‍රියාත්මක වීමට උත්සාහ කිරීම
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', handleOrientation, true);
+        }
 
         function handleOrientation(event) {
-            let beta = event.beta;
-            let gamma = event.gamma;
+            let beta = event.beta;   // ඉදිරියට/පස්සට ඇලවීම (-180 සිට 180 දක්වා)
+            let gamma = event.gamma; // වමට/දකුණට ඇලවීම (-90 සිට 90 දක්වා)
 
             if (beta === null || gamma === null) return;
 
+            // කෝණ සීමා කිරීම
             let clampedGamma = Math.max(-maxTilt, Math.min(maxTilt, gamma));
             let clampedBeta = Math.max(-maxTilt, Math.min(maxTilt, beta));
 
-            // රවුම විශාල වී ඇති නිසා බෝලය චලනය වන දුර ප්‍රමාණය (Range) සකස් කර ඇත
+            // බෝලය චලනය වන පිහිටීම ගණනය කිරීම
             let x = (clampedGamma / maxTilt) * 110; 
             let y = (clampedBeta / maxTilt) * 110;
 
-            let ball = document.getElementById('ball');
+            // බෝලය සජීවීව (Live) චලනය කිරීම
             ball.style.transform = `translate(${x}px, ${y}px)`;
         }
     </script>
