@@ -7,11 +7,12 @@
     <title>ESP32 Smart 4WD AI & IoT RC Car</title>
     <style>
         :root {
-            --bg-color: #090d16;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --border-color: rgba(255, 255, 255, 0.1);
+            --bg-color: #020617;
+            --card-bg: rgba(15, 23, 42, 0.7);
+            --border-color: rgba(56, 189, 248, 0.25);
             --accent-glow: #38bdf8;
             --primary: #6366f1;
+            --secondary: #ec4899;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
@@ -26,9 +27,13 @@
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            background-image:
-                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.15) 0%, transparent 40%);
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.18) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(56, 189, 248, 0.18) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
             min-height: 100vh;
             padding: 40px 20px;
             display: flex;
@@ -37,36 +42,49 @@
         }
 
         .container {
-            max-width: 950px;
+            max-width: 980px;
             width: 100%;
             background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--border-color);
-            border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            padding: 40px;
+            border-radius: 35px;
+            box-shadow: 0 35px 75px rgba(0, 0, 0, 0.75), 0 0 50px rgba(56, 189, 248, 0.1);
+            padding: 55px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent-glow), var(--secondary));
         }
 
         header {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 40px;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 25px;
+            padding-bottom: 30px;
         }
 
         h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            font-size: 2.7rem;
+            background: linear-gradient(135deg, #38bdf8, #818cf8, #f472b6);
             background-clip: text;
-            /* මෙන්න මේ පේළිය එකතු කරන්න */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         .creators {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             color: var(--text-muted);
             letter-spacing: 0.5px;
         }
@@ -74,19 +92,22 @@
         .creators span {
             color: var(--accent-glow);
             font-weight: 600;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
         }
 
         .section-title {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: var(--accent-glow);
-            margin: 30px 0 15px 0;
+            margin: 45px 0 18px 0;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
         }
 
         p {
-            line-height: 1.7;
+            line-height: 1.8;
             color: var(--text-muted);
             font-size: 1.05rem;
             margin-bottom: 15px;
@@ -95,30 +116,50 @@
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            gap: 22px;
             margin-top: 20px;
         }
 
         .card {
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(8, 14, 30, 0.85);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            border-radius: 20px;
+            padding: 28px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-glow);
+            transform: translateY(-8px) scale(1.01);
+            border-color: rgba(56, 189, 248, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .card:hover::after {
+            opacity: 1;
         }
 
         .card h3 {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: var(--text-main);
-            margin-bottom: 10px;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            font-weight: 600;
         }
 
         .card ul {
@@ -129,42 +170,52 @@
         .card li {
             color: var(--text-muted);
             font-size: 0.95rem;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             position: relative;
-            padding-left: 15px;
+            padding-left: 20px;
+            line-height: 1.6;
         }
 
         .card li::before {
-            content: "•";
+            content: "✦";
             color: var(--accent-glow);
             position: absolute;
             left: 0;
-            font-weight: bold;
+            font-size: 0.8rem;
+            top: 2px;
         }
 
         .features-badge-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 20px;
         }
 
         .badge {
-            background: rgba(56, 189, 248, 0.1);
+            background: rgba(56, 189, 248, 0.08);
             color: var(--accent-glow);
             border: 1px solid rgba(56, 189, 248, 0.3);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 0.9rem;
             font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: var(--accent-glow);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(56, 189, 248, 0.3);
         }
 
         .action-container {
             text-align: center;
-            margin-top: 35px;
+            margin-top: 45px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 18px;
             align-items: center;
         }
 
@@ -172,21 +223,21 @@
             display: inline-block;
             background: linear-gradient(135deg, var(--primary), var(--accent-glow));
             color: #ffffff;
-            padding: 14px 32px;
-            border-radius: 30px;
+            padding: 16px 40px;
+            border-radius: 40px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 30px rgba(56, 189, 248, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .update-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(56, 189, 248, 0.5);
-            filter: brightness(1.1);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(56, 189, 248, 0.65);
+            filter: brightness(1.15);
         }
 
         #main-view {
@@ -201,89 +252,99 @@
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(56, 189, 248, 0.2);
+            width: 65px;
+            height: 65px;
+            border: 4px solid rgba(56, 189, 248, 0.15);
             border-top: 4px solid var(--accent-glow);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
             margin: 0 auto 20px auto;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .loader-text {
             color: var(--accent-glow);
-            font-size: 1.2rem;
+            font-size: 1.35rem;
             font-weight: 500;
+            letter-spacing: 0.3px;
         }
 
         .updates-box {
             text-align: left;
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(8, 14, 30, 0.9);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 30px;
-            margin-top: 20px;
-            box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.05);
+            border-radius: 25px;
+            padding: 38px;
+            margin-top: 25px;
+            box-shadow: inset 0 0 30px rgba(56, 189, 248, 0.05);
         }
 
         .progress-container {
-            margin: 20px 0;
+            margin: 28px 0;
         }
 
         .progress-label {
             display: flex;
             justify-content: space-between;
-            font-size: 0.95rem;
+            font-size: 0.98rem;
             color: var(--text-muted);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            font-weight: 500;
         }
 
         .progress-bar-bg {
             width: 100%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
+            height: 14px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 7px;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .progress-bar-fill {
             width: 0%;
             height: 100%;
             background: linear-gradient(90deg, var(--primary), var(--accent-glow));
-            border-radius: 5px;
-            box-shadow: 0 0 10px var(--accent-glow);
-            transition: width 1s ease-in-out;
+            border-radius: 7px;
+            box-shadow: 0 0 20px var(--accent-glow);
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .updates-box ul {
             padding-left: 20px;
             margin-top: 15px;
+            list-style-type: none;
         }
 
         .updates-box li {
             color: var(--text-muted);
-            margin-bottom: 10px;
-            line-height: 1.6;
+            margin-bottom: 12px;
+            line-height: 1.7;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .updates-box li::before {
+            content: "✓";
+            color: var(--accent-glow);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
         }
 
         .back-btn {
             display: inline-block;
             margin-top: 15px;
-            background: rgba(56, 189, 248, 0.1);
+            background: rgba(56, 189, 248, 0.08);
             color: var(--accent-glow);
             border: 1px solid rgba(56, 189, 248, 0.3);
-            padding: 10px 24px;
-            border-radius: 20px;
+            padding: 12px 30px;
+            border-radius: 30px;
             text-decoration: none;
             font-weight: 500;
             cursor: pointer;
@@ -292,16 +353,18 @@
 
         .back-btn:hover {
             background: var(--accent-glow);
-            color: #000;
+            color: #020617;
+            box-shadow: 0 6px 25px rgba(56, 189, 248, 0.5);
         }
 
         .footer {
             text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
+            margin-top: 45px;
+            padding-top: 25px;
             border-top: 1px solid var(--border-color);
             color: var(--text-muted);
             font-size: 0.9rem;
+            letter-spacing: 0.3px;
         }
     </style>
 </head>
@@ -310,7 +373,6 @@
 
     <div class="container">
 
-        <!-- MAIN VIEW -->
         <div id="main-view">
             <header>
                 <h1>ESP32 Smart 4WD IoT & AI RC Car</h1>
@@ -321,9 +383,7 @@
                 <h2 class="section-title">📌 Project Overview</h2>
                 <p>
                     This project represents an advanced, high-performance, wireless-controlled 4WD robotic vehicle
-                    integrated with IoT capabilities, live video streaming, and intelligent sensor arrays. Designed for
-                    remote surveillance, autonomous navigation, and dynamic lighting control, it bridges cutting-edge
-                    microcontrollers with robust mechanical assembly.
+                    integrated with IoT capabilities, live video streaming, and intelligent sensor arrays.
                 </p>
             </section>
 
@@ -387,13 +447,11 @@
             </div>
         </div>
 
-        <!-- LOADER VIEW -->
         <div id="loader-view">
             <div class="spinner"></div>
             <div class="loader-text">Please wait, checking for updates and loading information...</div>
         </div>
 
-        <!-- UPDATES VIEW -->
         <div id="updates-view">
             <header>
                 <h1>♻️ Software Updates & About</h1>
@@ -410,71 +468,50 @@
             </header>
 
             <div class="updates-box">
-                <h3 style="color: var(--accent-glow); margin-bottom: 12px; font-size: 1.25rem;">📦 Upcoming New Update
-                    Details</h3>
+                <h3 style="color: var(--accent-glow); margin-bottom: 12px; font-size: 1.25rem;">📦 Upcoming New Update Details</h3>
 
                 <p style="margin-bottom: 8px;">
                     <strong>New Update Name/Version:</strong> <span id="upcoming-version-text"
-                        style="color: #38bdf8; font-weight: bold;">V1.30.0 (AI Vision & Auto-Mapping)</span>
+                        style="color: #38bdf8; font-weight: bold;">V2.261201 (AI Vision & Auto-Mapping)</span>
                 </p>
                 <p style="margin-bottom: 15px;">
                     <strong>Expected Release Date:</strong> <strong id="release-date-text"
-                        style="color: #38bdf8;">2026.10.15</strong>
+                        style="color: #38bdf8;">2026.12.01</strong>
                 </p>
 
                 <div class="progress-container">
                     <div class="progress-label">
-                        <span>Development Status: <strong id="status-text">Final Testing Phase</strong></span>
-                        <span id="progress-percentage-text">100% Completed</span>
+                        <span>Development Status: <strong id="status-text">Developing</strong></span>
+                        <span id="progress-percentage-text">73% Completed</span>
                     </div>
                     <div class="progress-bar-bg">
-                        <div id="progress-bar" class="progress-bar-fill"></div>
+                        <div id="progress-bar" class="progress-bar-fill" style="width: 73%;"></div>
                     </div>
                 </div>
 
-                <!-- Security Enhancements -->
-                <h3 style="color: var(--accent-glow); margin: 25px 0 10px 0; font-size: 1.1rem;">🛡️ Security
-                    Enhancements</h3>
+                <h3 style="color: var(--accent-glow); margin: 25px 0 10px 0; font-size: 1.1rem;">🛡️ Security Enhancements</h3>
                 <ul>
-                    <li><strong>Secure Wi-Fi Connection:</strong> Configured the ESP32 microcontroller to connect only
-                        to a specific and reliable network, minimizing unauthorized access.</li>
-                    <li><strong>Stable Web Server:</strong> Implemented a stable code structure to prevent memory leaks
-                        or system crashes while the web server is running.</li>
-                    <li><strong>Command Validation:</strong> Converts commands received from the web dashboard into
-                        correct signals and safely sends them to the motor driver.</li>
+                    <li><strong>Secure Wi-Fi Connection:</strong> Configured the ESP32 microcontroller to connect only to a specific and reliable network, minimizing unauthorized access.</li>
+                    <li><strong>Stable Web Server:</strong> Implemented a stable code structure to prevent memory leaks or system crashes while the web server is running.</li>
+                    <li><strong>Command Validation:</strong> Converts commands received from the web dashboard into correct signals and safely sends them to the motor driver.</li>
                 </ul>
 
-                <!-- Performance Improvements -->
-                <h3 style="color: var(--accent-glow); margin: 25px 0 10px 0; font-size: 1.1rem;">⚡ Performance
-                    Improvements</h3>
+                <h3 style="color: var(--accent-glow); margin: 25px 0 10px 0; font-size: 1.1rem;">⚡ Performance Improvements</h3>
                 <ul>
-                    <li><strong>Optimized Web Response:</strong> Since HTML, CSS, and JavaScript codes are
-                        well-organized in one place, the web page loads very quickly in the browser.</li>
-                    <li><strong>Smooth Motor Control:</strong> Configured to operate instantly without any delay when
-                        moving the car forward, backward, left, and right.</li>
-                    <li><strong>Full Code Integrity:</strong> Unlike previous iterations where styles or interfaces
-                        stopped halfway, a successful source code complete with all features is provided.</li>
-                </ul>
-
-                <!-- More Features -->
-                <h3 style="color: var(--accent-glow); margin: 25px 0 10px 0; font-size: 1.1rem;">🌟 More Features</h3>
-                <ul>
-                    <li>Real-time sensor feedback integrated smoothly into the modern web UI dashboard.</li>
-                    <li>Responsive design optimized for both mobile phones and desktop browsers.</li>
-                    <li>Modular software architecture allowing easy future firmware updates and expansion.</li>
+                    <li><strong>Optimized Web Response:</strong> Since HTML, CSS, and JavaScript codes are well-organized in one place, the web page loads very quickly in the browser.</li>
+                    <li><strong>Smooth Motor Control:</strong> Configured to operate instantly without any delay when moving the car forward, backward, left, and right.</li>
+                    <li><strong>Full Code Integrity:</strong> Unlike previous iterations where styles or interfaces stopped halfway, a successful source code complete with all features is provided.</li>
                 </ul>
             </div>
 
             <div style="text-align: center;">
                 <button onclick="goBackToMain()" class="back-btn" style="margin-top: 30px;">← Back to Overview</button>
 
-                <!-- 100% වූ විට පමණක් පෙනෙන Get Source Code බටන් එක -->
                 <div id="source-code-container" style="margin-top: 15px; display: none;">
                     <button onclick="showSourceCodePopup()" class="update-btn"
                         style="padding: 10px 24px; font-size: 0.95rem;">Get Source Code →</button>
                 </div>
 
-                <!-- 100% වුණත් නැතත් සැමවිටම පෙනෙන Updates Hub බටන් එක -->
                 <div style="margin-top: 10px;">
                     <button onclick="goToUpdatesHub()" class="update-btn"
                         style="padding: 10px 24px; font-size: 0.95rem;">Go to Updates Hub</button>
@@ -487,24 +524,18 @@
         </div>
     </div>
 
-    <!-- JavaScript Configuration Panel -->
     <script>
-        // ==========================================================
-        // ⚙️ CONFIGURATION PANEL
-        // ==========================================================
-        const updateSettings = {
+        let updateSettings = {
             currentVersion: "V1.260917",
             upcomingVersion: "V2.261201 (AI Vision & Auto-Mapping)",
-            upcomingReleaseDate: "Comming Soon",
-            progressValue: 63.54,
-            statusDescription: "compleated successfully"
+            upcomingReleaseDate: "2026.12.01",
+            progressValue: 63.42,
+            statusDescription: "Developing"
         };
-        // ==========================================================
 
-        window.addEventListener('DOMContentLoaded', (event) => {
+        function applySettings() {
             document.getElementById('header-version').innerText = updateSettings.currentVersion;
             document.getElementById('current-version-text').innerText = updateSettings.currentVersion;
-
             document.getElementById('upcoming-version-text').innerText = updateSettings.upcomingVersion;
             document.getElementById('release-date-text').innerText = updateSettings.upcomingReleaseDate;
             document.getElementById('status-text').innerText = updateSettings.statusDescription;
@@ -521,6 +552,10 @@
             } else {
                 document.getElementById('source-code-container').style.display = 'none';
             }
+        }
+
+        window.addEventListener('DOMContentLoaded', (event) => {
+            applySettings();
         });
 
         function startUpdatesProcess() {
@@ -530,7 +565,7 @@
             setTimeout(function () {
                 document.getElementById('loader-view').style.display = 'none';
                 document.getElementById('updates-view').style.display = 'block';
-            }, 8000);
+            }, 5000);
         }
 
         function goBackToMain() {
@@ -540,7 +575,6 @@
 
         function showSourceCodePopup() {
             alert("You can get the code, but you need to upload it via a USB cable using Arduino IDE on your computer or phone, because ESP32 OTA (Over-The-Air) updates are not available yet.");
-
             setTimeout(function () {
                 window.location.href = "https://cmadushan2009-stack.github.io/Code/";
             }, 100);
